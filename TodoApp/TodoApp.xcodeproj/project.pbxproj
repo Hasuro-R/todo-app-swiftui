@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E182CC02C385A390004EBA8 /* MainFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 9E182CBF2C385A390004EBA8 /* MainFeature */; };
 		9E355E452C22EDDD0096F1B9 /* TodoAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E355E442C22EDDD0096F1B9 /* TodoAppApp.swift */; };
 		9E355E472C22EDDD0096F1B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E355E462C22EDDD0096F1B9 /* ContentView.swift */; };
 		9E355E492C22EDDE0096F1B9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E355E482C22EDDE0096F1B9 /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 			files = (
 				9ED658282C381DE000B2AA57 /* HomeFeature in Frameworks */,
 				9ED658232C3477CB00B2AA57 /* ComposableArchitecture in Frameworks */,
+				9E182CC02C385A390004EBA8 /* MainFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +104,7 @@
 			packageProductDependencies = (
 				9ED658222C3477CB00B2AA57 /* ComposableArchitecture */,
 				9ED658272C381DE000B2AA57 /* HomeFeature */,
+				9E182CBF2C385A390004EBA8 /* MainFeature */,
 			);
 			productName = TodoApp;
 			productReference = 9E355E412C22EDDD0096F1B9 /* TodoApp.app */;
@@ -380,6 +383,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9E182CBF2C385A390004EBA8 /* MainFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MainFeature;
+		};
 		9ED658222C3477CB00B2AA57 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9ED658212C3477CB00B2AA57 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
