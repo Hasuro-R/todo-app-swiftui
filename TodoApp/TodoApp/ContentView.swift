@@ -1,9 +1,9 @@
 import SwiftUI
-import HomeFeature
+import MainFeature
 
 struct ContentView: View {
     var body: some View {
-        HomeView()
+        MainView()
     }
 }
 

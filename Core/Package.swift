@@ -18,12 +18,28 @@ let package = Package(
             targets: ["Repositories"]
         ),
         .library(
+            name: "MainFeature",
+            targets: ["MainFeature"]
+        ),
+        .library(
             name: "HomeFeature",
             targets: ["HomeFeature"]
+        ),
+        .library(
+            name: "CustomView",
+            targets: ["CustomView"]
+        ),
+        .library(
+            name: "Assets",
+            targets: ["Assets"]
+        ),
+        .library(
+            name: "Models",
+            targets: ["Models"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.11.2")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.11.2"),
     ],
     targets: [
         .target(
@@ -31,14 +47,38 @@ let package = Package(
             dependencies: []
         ),
         .target(
-            name: "HomeFeature",
-            dependencies: [
-                .composableArchitecture
-            ],
-            path: "Sources/Features/HomeFeature"
+            name: "Repositories",
+            dependencies: []
         ),
         .target(
-            name: "Repositories",
+            name: "MainFeature",
+            dependencies: [
+                "HomeFeature"
+            ],
+            path: path("MainFeature")
+        ),
+        .target(
+            name: "HomeFeature",
+            dependencies: [
+                .assets,
+                .models,
+                .customView,
+                .composableArchitecture,
+            ],
+            path: path("/HomeFeature")
+        ),
+        .target(
+            name: "Assets",
+            dependencies: []
+        ),
+        .target(
+            name: "CustomView",
+            dependencies: [
+                .assets
+            ]
+        ),
+        .target(
+            name: "Models",
             dependencies: []
         ),
         .testTarget(
@@ -53,5 +93,13 @@ let package = Package(
 )
 
 extension Target.Dependency {
+    static let assets: Self = "Assets"
+    static let models: Self = "Models"
+    static let customView: Self = "CustomView"
+
     static let composableArchitecture: Self = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+}
+
+func path(_ pathName: String) -> String {
+    return "Sources/Features/\(pathName)"
 }
