@@ -10,20 +10,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "APIClients",
-            targets: ["APIClients"]
-        ),
-        .library(
-            name: "Repositories",
-            targets: ["Repositories"]
-        ),
-        .library(
             name: "MainFeature",
             targets: ["MainFeature"]
         ),
         .library(
             name: "HomeFeature",
             targets: ["HomeFeature"]
+        ),
+        .library(
+            name: "MainAPIClient",
+            targets: ["MainAPIClient"]
+        ),
+        .library(
+            name: "WorkspaceAPIClient",
+            targets: ["WorkspaceAPIClient"]
         ),
         .library(
             name: "CustomView",
@@ -43,19 +43,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "APIClients",
-            dependencies: []
-        ),
-        .target(
-            name: "Repositories",
-            dependencies: []
-        ),
-        .target(
             name: "MainFeature",
             dependencies: [
                 "HomeFeature"
             ],
-            path: path("MainFeature")
+            path: featurePath("MainFeature")
         ),
         .target(
             name: "HomeFeature",
@@ -64,8 +56,22 @@ let package = Package(
                 .models,
                 .customView,
                 .composableArchitecture,
+                "WorkspaceAPIClient"
             ],
-            path: path("/HomeFeature")
+            path: featurePath("HomeFeature")
+        ),
+        .target(
+            name: "MainAPIClient",
+            dependencies: [],
+            path: apiClientPath("MainAPIClient")
+        ),
+        .target(
+            name: "WorkspaceAPIClient",
+            dependencies: [
+                .models,
+                .mainAPIClient,
+            ],
+            path: apiClientPath("WorkspaceAPIClient")
         ),
         .target(
             name: "Assets",
@@ -81,14 +87,6 @@ let package = Package(
             name: "Models",
             dependencies: []
         ),
-        .testTarget(
-            name: "APIClientsTest",
-            dependencies: ["APIClients"]
-        ),
-        .testTarget(
-            name: "RepositoriesTest",
-            dependencies: ["Repositories"]
-        ),
     ]
 )
 
@@ -96,10 +94,15 @@ extension Target.Dependency {
     static let assets: Self = "Assets"
     static let models: Self = "Models"
     static let customView: Self = "CustomView"
+    static let mainAPIClient: Self = "MainAPIClient"
 
     static let composableArchitecture: Self = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
 }
 
-func path(_ pathName: String) -> String {
+func featurePath(_ pathName: String) -> String {
     return "Sources/Features/\(pathName)"
+}
+
+func apiClientPath(_ pathName: String) -> String {
+    return "Sources/APIClients/\(pathName)"
 }
