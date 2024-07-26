@@ -15,7 +15,11 @@ public struct HomeView: View {
         ZStack() {
             VStack {
                 Header()
-                WorkspacesList(workspacesData: store.workspaces)
+                if (store.isLoading) {
+                    Text(store.error)
+                } else {
+                    WorkspacesList(workspacesData: store.workspaces)
+                }
                 Spacer()
             }
             GeometryReader { geometry in
@@ -31,6 +35,9 @@ public struct HomeView: View {
         .padding()
         .sheet(isPresented: $store.showSheet) {
             CreateWorkspaceSheet(store: store)
+        }
+        .onAppear {
+            store.send(.firstFetch)
         }
     }
 }
@@ -81,10 +88,13 @@ struct WorkspacesList: View {
             Text("ワークスペース")
                 .font(.system(size: 14))
                 .foregroundColor(customColors.textColorSub)
-            VStack(spacing: 10) {
-                ForEach(workspacesData, id: \.id) { workspaceData in
-                    WorkspaceListBox(workspaceData: workspaceData)
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(workspacesData, id: \.id) { workspaceData in
+                        WorkspaceListBox(workspaceData: workspaceData)
+                    }
                 }
+                .padding(5)
             }
         }
         .padding(.top, 10)
