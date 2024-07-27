@@ -34,6 +34,10 @@ let package = Package(
             targets: ["Assets"]
         ),
         .library(
+            name: "Code",
+            targets: ["Code"]
+        ),
+        .library(
             name: "Models",
             targets: ["Models"]
         )
@@ -55,6 +59,7 @@ let package = Package(
                 .assets,
                 .models,
                 .customView,
+                .code,
                 .composableArchitecture,
                 "WorkspaceAPIClient"
             ],
@@ -78,6 +83,10 @@ let package = Package(
             dependencies: []
         ),
         .target(
+            name: "Code",
+            dependencies: []
+        ),
+        .target(
             name: "CustomView",
             dependencies: [
                 .assets
@@ -92,6 +101,7 @@ let package = Package(
 
 extension Target.Dependency {
     static let assets: Self = "Assets"
+    static let code: Self = "Code"
     static let models: Self = "Models"
     static let customView: Self = "CustomView"
     static let mainAPIClient: Self = "MainAPIClient"

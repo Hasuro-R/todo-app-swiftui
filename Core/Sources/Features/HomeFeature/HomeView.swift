@@ -16,7 +16,7 @@ public struct HomeView: View {
             VStack {
                 Header()
                 if (store.isLoading) {
-                    Text(store.error)
+                    Text("is loading...")
                 } else {
                     WorkspacesList(workspacesData: store.workspaces)
                 }

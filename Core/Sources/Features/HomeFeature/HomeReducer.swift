@@ -1,4 +1,5 @@
 import Foundation
+import Code
 import ComposableArchitecture
 import Models
 import WorkspaceAPIClient
@@ -11,7 +12,6 @@ public struct HomeReducer {
         var workspaces: [WorkspaceModel] = []
         var workspaceTitle = ""
         var isLoading = false
-        var error = ""
     }
     public enum Action: BindableAction {
         case firstFetch
@@ -19,6 +19,7 @@ public struct HomeReducer {
         case toggleShowState
         case changeWorkspaceTitle(String)
         case createWorkspace
+        case createWorkspaceResponse(Result<WorkspaceModel, Error>)
         case binding(BindingAction<State>)
     }
     
@@ -33,7 +34,7 @@ public struct HomeReducer {
                 state.isLoading = true
                 return .run { send in
                     do {
-                        let workspaceData = try await fetchWorkspacesAPIClient.fetchData(responseType: WorkspaceListResponse.self)
+                        let workspaceData = try await fetchWorkspacesAPIClient.fetchData(responseType: WorkspaceListResponse.self, requestBody: nil as EmptyBody?)
                         await send(.firstFetchResponse(.success(workspaceData.workspaces)))
                     } catch {
                         await send(.firstFetchResponse(.failure(error)))
@@ -44,7 +45,7 @@ public struct HomeReducer {
                 state.isLoading = false
                 return .none
             case let .firstFetchResponse(.failure(error)):
-                state.error = "\(error)"
+                print(error)
                 state.isLoading = false
                 return .none
             case .toggleShowState:
@@ -54,10 +55,23 @@ public struct HomeReducer {
                 state.workspaceTitle = newText
                 return .none
             case .createWorkspace:
-                let newWorkspace = WorkspaceModel(id: (state.workspaces.count + 1), title: state.workspaceTitle, emoji: "🤩", userId: 100, createdAt: "2024-07-10T12:00:00Z")
-                state.workspaces.append(newWorkspace)
+                let requestBody = CreateWorkspaceRequestBody(title: state.workspaceTitle, emoji: "⭐️")
+                
+                return .run { send in
+                    do {
+                        let newWorkspaceData = try await createWorkspaceAPIClient.fetchData(responseType: WorkspaceModel.self, requestBody: requestBody)
+                        await send(.createWorkspaceResponse(.success(newWorkspaceData)))
+                    } catch {
+                        await send(.createWorkspaceResponse(.failure(error)))
+                    }
+                }
+            case let .createWorkspaceResponse(.success(workspace)):
+                state.workspaces.append(workspace)
                 state.workspaceTitle = ""
                 state.showSheet = false
+                return .none
+            case let .createWorkspaceResponse(.failure(error)):
+                print(error)
                 return .none
             case .binding(\.showSheet):
                 return .none
