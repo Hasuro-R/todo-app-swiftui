@@ -24,16 +24,20 @@ public class ApiClient {
         self.method = method
     }
     
-    private func createRequest() -> URLRequest? {
+    private func createRequest<T: Encodable>(body: T?) -> URLRequest? {
         guard let url = URL(string: "http:/localhost:8080/\(urlString)") else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
+        if let body = body {
+            request.httpBody = try? JSONEncoder().encode(body)
+            request.setValue("application/body", forHTTPHeaderField: "Content-Type")
+        }
         
         return request
     }
     
-    public func fetchData<T: Codable>(responseType: T.Type) async throws -> T {
-        guard let request = createRequest() else {
+    public func fetchData<T: Codable, U: Encodable>(responseType: T.Type, requestBody: U? = nil) async throws -> T {
+        guard let request = createRequest(body: requestBody) else {
             throw ApiError.invalidUrl
         }
         let (data, response) = try await URLSession.shared.data(for: request)
